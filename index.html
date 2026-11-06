@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProManage - Business Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<div class="app">
+
+<aside class="sidebar" id="sidebar">
+ <div class="logo">Pro<span>Manage.</span></div>
+ <div class="nav">
+  <div class="nav-label">MAIN MENU</div>
+  <button class="active" data-page="dashboard">▦ Dashboard</button>
+  <button data-page="customers">♙ Customers</button>
+  <button data-page="products">▣ Products</button>
+  <button data-page="sales">◈ Sales</button>
+  <div class="nav-label">MANAGEMENT</div>
+  <button data-page="reports">▤ Reports</button>
+  <button data-page="settings">⚙ Settings</button>
+ </div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+ <div style="display:flex;align-items:center;gap:12px">
+  <button class="btn secondary menu-btn" id="menuBtn">☰</button>
+  <div><h1 id="pageTitle">Dashboard</h1>
+  <small style="color:var(--muted)">Welcome back! Here's your business overview.</small></div>
+ </div>
+ <div class="top-actions">
+  <button class="btn secondary" id="themeBtn">🌙</button>
+  <button class="btn" onclick="openModal('product')">+ Add Product</button>
+ </div>
+</header>
+
+<!-- DASHBOARD -->
+<section class="section active" id="dashboard">
+ <div class="stats">
+  <div class="card"><div class="stat-title">Total Revenue</div><div class="stat-value" id="revenue">৳0</div><div class="stat-note">Sales overview</div></div>
+  <div class="card"><div class="stat-title">Total Orders</div><div class="stat-value" id="orders">0</div><div class="stat-note">Recorded sales</div></div>
+  <div class="card"><div class="stat-title">Total Customers</div><div class="stat-value" id="customerCount">0</div><div class="stat-note">Registered customers</div></div>
+  <div class="card"><div class="stat-title">Total Products</div><div class="stat-value" id="productCount">0</div><div class="stat-note">Inventory items</div></div>
+ </div>
+
+ <div class="content-grid">
+  <div class="card">
+   <h3>Revenue Overview</h3>
+   <div class="chart">
+    <svg viewBox="0 0 600 220" preserveAspectRatio="none">
+     <defs>
+      <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
+       <stop offset="0%" stop-color="#6558e8" stop-opacity=".3"/>
+       <stop offset="100%" stop-color="#6558e8" stop-opacity="0"/>
+      </linearGradient>
+     </defs>
+     <g stroke="var(--border)" stroke-dasharray="4 4">
+      <path d="M40 30H590 M40 80H590 M40 130H590 M40 180H590"/>
+     </g>
+     <path id="chartArea" fill="url(#area)" d=""/>
+     <path id="chartLine" fill="none" stroke="#6558e8" stroke-width="3" stroke-linecap="round"/>
+     <g id="chartLabels"></g>
+    </svg>
+   </div>
+  </div>
+  <div class="card">
+   <h3>Inventory Overview</h3>
+   <div id="inventoryOverview"></div>
+  </div>
+ </div>
+
+ <div class="table-card">
+  <div class="table-head"><h3>Recent Sales</h3><button class="btn secondary" onclick="showPage('sales')">View All</button></div>
+  <div class="table-wrap">
+   <table><thead><tr><th>Customer</th><th>Product</th><th>Amount</th><th>Date</th></tr></thead>
+   <tbody id="recentSales"></tbody></table>
+  </div>
+ </div>
+</section>
+
+<!-- CUSTOMERS -->
+<section class="section" id="customers">
+ <div class="table-card">
+  <div class="table-head">
+   <h3>Customer Management</h3>
+   <div class="table-tools">
+    <input id="customerSearch" placeholder="Search customers...">
+    <button class="btn" onclick="openModal('customer')">+ Add Customer</button>
+    <button class="btn secondary" onclick="exportCSV('customers')">Export CSV</button>
+   </div>
+  </div>
+  <div class="table-wrap">
+   <table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Actions</th></tr></thead>
+   <tbody id="customerTable"></tbody></table>
+  </div>
+  <div class="pagination" id="customerPagination"></div>
+ </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="section" id="products">
+ <div class="table-card">
+  <div class="table-head">
+   <h3>Product Inventory</h3>
+   <div class="table-tools">
+    <input id="productSearch" placeholder="Search products...">
+    <select id="stockFilter" style="width:140px">
+     <option value="all">All Stock</option>
+     <option value="low">Low Stock</option>
+     <option value="available">Available</option>
+    </select>
+    <button class="btn" onclick="openModal('product')">+ Add Product</button>
+    <button class="btn secondary" onclick="exportCSV('products')">Export CSV</button>
+   </div>
+  </div>
+  <div class="table-wrap">
+   <table><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead>
+   <tbody id="productTable"></tbody></table>
+  </div>
+  <div class="pagination" id="productPagination"></div>
+ </div>
+</section>
+
+<!-- SALES -->
+<section class="section" id="sales">
+ <div class="table-card">
+  <div class="table-head">
+   <h3>Sales Management</h3>
+   <div class="table-tools">
+    <input id="salesSearch" placeholder="Search sales...">
+    <button class="btn" onclick="openModal('sale')">+ New Sale</button>
+    <button class="btn secondary" onclick="exportCSV('sales')">Export CSV</button>
+   </div>
+  </div>
+  <div class="table-wrap">
+   <table><thead><tr><th>Customer</th><th>Product</th><th>Quantity</th><th>Amount</th><th>Date</th><th>Action</th></tr></thead>
+   <tbody id="salesTable"></tbody></table>
+  </div>
+  <div class="pagination" id="salesPagination"></div>
+ </div>
+</section>
+
+<!-- REPORTS -->
+<section class="section" id="reports">
+ <div class="stats">
+  <div class="card"><div class="stat-title">Revenue</div><div class="stat-value" id="reportRevenue">৳0</div></div>
+  <div class="card"><div class="stat-title">Sales Count</div><div class="stat-value" id="reportOrders">0</div></div>
+  <div class="card"><div class="stat-title">Low Stock Items</div><div class="stat-value" id="lowStock">0</div></div>
+  <div class="card"><div class="stat-title">Inventory Value</div><div class="stat-value" id="inventoryValue">৳0</div></div>
+ </div>
+ <div class="card">
+  <h3>Business Report</h3>
+  <p style="color:var(--muted);line-height:2">Export your customers, products and sales records as CSV files to analyze your business data in spreadsheet software.</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
+   <button class="btn" onclick="exportCSV('customers')">Customers CSV</button>
+   <button class="btn" onclick="exportCSV('products')">Products CSV</button>
+   <button class="btn" onclick="exportCSV('sales')">Sales CSV</button>
+  </div>
+ </div>
+</section>
+
+<!-- SETTINGS -->
+<section class="section" id="settings">
+ <div class="card">
+  <h3>Settings</h3>
+  <p style="color:var(--muted);margin-bottom:18px">Manage your dashboard preferences.</p>
+  <button class="btn secondary" onclick="toggleTheme()">Toggle Dark / Light Mode</button>
+  <button class="btn secondary" onclick="resetData()" style="margin-left:8px">Reset Demo Data</button>
+ </div>
+</section>
+</main>
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+ <div class="modal-box">
+  <div class="modal-head"><h3 id="modalTitle">Add Item</h3><button class="close" onclick="closeModal()">×</button></div>
+  <form id="modalForm">
+   <div id="formFields" class="form-grid"></div>
+   <div style="display:flex;gap:10px">
+    <button class="btn" type="submit">Save</button>
+    <button class="btn secondary" type="button" onclick="closeModal()">Cancel</button>
+   </div>
+  </form>
+ </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
